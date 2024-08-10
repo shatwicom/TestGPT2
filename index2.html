@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Order Feedback</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .lang-switch {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        .lang-switch button {
+            padding: 5px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        h1 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select, .rating {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 10px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .rating label {
+            color: gray;
+            font-size: 20px;
+            padding: 0;
+            cursor: pointer;
+        }
+        .rating label:hover, .rating label:hover ~ label {
+            color: gold;
+        }
+        .button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .g-recaptcha {
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="lang-switch">
+            <button id="en" class="active" onclick="switchLang('en')">English</button>
+            <button id="ar" onclick="switchLang('ar')">عربي</button>
+        </div>
+
+        <h1 id="formTitle">Food Order Feedback</h1>
+
+        <form id="feedbackForm" name="feedbackForm" method="POST" data-netlify="true">
+            <div class="form-group">
+                <label id="orderNumberLabel" for="orderNumber">Order Number:</label>
+                <input type="text" id="orderNumber" name="orderNumber" required>
+            </div>
+            <div class="form-group">
+                <label id="orderDateLabel" for="orderDate">Order Date (optional):</label>
+                <input type="date" id="orderDate" name="orderDate">
+            </div>
+            <div class="form-group">
+                <label id="deliveryServiceLabel" for="deliveryService">Delivery Service:</label>
+                <select id="deliveryService" name="deliveryService">
+                    <option value="HungerStation">HungerStation</option>
+                    <option value="Jahez">Jahez</option>
+                    <option value="Toyo">Toyo</option>
+                    <option value="Pickup">Pickup from Restaurant</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label id="deliverySpeedLabel" for="deliverySpeed">Delivery Speed:</label>
+                <div class="rating" id="deliverySpeed">
+                    <label onclick="updateRating('deliverySpeed', 1)">★</label>
+                    <label onclick="updateRating('deliverySpeed', 2)">★</label>
+                    <label onclick="updateRating('deliverySpeed', 3)">★</label>
+                    <label onclick="updateRating('deliverySpeed', 4)">★</label>
+                    <label onclick="updateRating('deliverySpeed', 5)">★</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label id="orderExpectationsLabel" for="orderExpectations">Order Expectations:</label>
+                <div class="rating" id="orderExpectations">
+                    <label onclick="updateRating('orderExpectations', 1)">★</label>
+                    <label onclick="updateRating('orderExpectations', 2)">★</label>
+                    <label onclick="updateRating('orderExpectations', 3)">★</label>
+                    <label onclick="updateRating('orderExpectations', 4)">★</label>
+                    <label onclick="updateRating('orderExpectations', 5)">★</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label id="packagingLabel" for="packaging">Was the order securely packaged?</label>
+                <select id="packaging" name="packaging">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label id="phoneNumberLabel" for="phoneNumber">Phone Number (optional):</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" pattern="05[0-9]{8}">
+            </div>
+            <div class="form-group g-recaptcha" data-sitekey=https://recaptchaenterprise.googleapis.com/v1/projects/testgpt-1723236466367/assessments?key=API_KEY></div>
+            <button type="submit" class="button">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        function switchLang(lang) {
+            const translations = {
+                en: {
+                    formTitle: "Food Order Feedback",
+                    orderNumberLabel: "Order Number:",
+                    orderDateLabel: "Order Date (optional):",
+                    deliveryServiceLabel: "Delivery Service:",
+                    deliverySpeedLabel: "Delivery Speed:",
+                    orderExpectationsLabel: "Order Expectations:",
+                    packagingLabel: "Was the order securely packaged?",
+                    phoneNumberLabel: "Phone Number (optional):"
+                },
+                ar: {
+                    formTitle: "تقييم الطلب",
+                    orderNumberLabel: "رقم الطلب:",
+                    orderDateLabel: "تاريخ الطلب (اختياري):",
+                    deliveryServiceLabel: "خدمة التوصيل:",
+                    deliverySpeedLabel: "سرعة التوصيل:",
+                    orderExpectationsLabel: "هل الطلب بتصل الى تطلعاتك؟",
+                    packagingLabel: "هل الطلب كان مغلق بإحكام عند الوصول؟",
+                    phoneNumberLabel: "رقم الجوال (اختياري):"
+                }
+            };
+
+            document.getElementById('formTitle').innerText = translations[lang].formTitle;
+            document.getElementById('orderNumberLabel').innerText = translations[lang].orderNumberLabel;
+            document.getElementById('orderDateLabel').innerText = translations[lang].orderDateLabel;
+            document.getElementById('deliveryServiceLabel').innerText = translations[lang].deliveryServiceLabel;
+            document.getElementById('deliverySpeedLabel').innerText = translations[lang].deliverySpeedLabel;
+            document.getElementById('orderExpectationsLabel').innerText = translations[lang].orderExpectationsLabel;
+            document.getElementById('packagingLabel').innerText = translations[lang].packagingLabel;
+            document.getElementById('phoneNumberLabel').innerText = translations[lang].phoneNumberLabel;
+
+            document.getElementById('en').classList.toggle('active', lang === 'en');
+            document.getElementById('ar').classList.toggle('active', lang === 'ar');
+        }
+
+        function updateRating(group, rating) {
+            const labels = document.querySelectorAll(`#${group} .rating label`);
+            labels.forEach((label, index) => {
+                label.style.color = index < rating ? 'gold' : 'gray';
+            });
+        }
+
+        // Default language
+        switchLang('en');
+    </script>
+</body>
+</html>
